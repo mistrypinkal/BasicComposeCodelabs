@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.pm.basiccomposecodelabs.ui.theme.BasicComposeCodelabsTheme
 import java.util.*
 
+@ExperimentalFoundationApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -223,19 +226,58 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     }
 }
 
-// Step: MySoothe App - Scaffold
+
+// Step 8: Bottom Navigation
+@Composable
+private fun SootheBottomNavigation(modifier: Modifier = Modifier) {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.background,
+        modifier = modifier
+    ) {
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(stringResource(R.string.bottom_navigation_home))
+            },
+            selected = true,
+            onClick = {}
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(stringResource(R.string.bottom_navigation_profile))
+            },
+            selected = false,
+            onClick = {}
+        )
+    }
+}
+
+// Step 9: MySoothe App - Scaffold
+@ExperimentalFoundationApi
 @Composable
 fun MySootheApp() {
     // Implement composable here
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
     BasicComposeCodelabsTheme {
-        MySootheApp()
+        Scaffold(
+            bottomBar = { SootheBottomNavigation() }
+        ) { padding ->
+            HomeScreen(Modifier.padding(padding))
+        }
     }
 }
+
+
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
@@ -286,11 +328,31 @@ fun FavoriteCollectionsGridPreview() {
 @ExperimentalFoundationApi
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
+fun SootheBottomNavigationPreview() {
+    BasicComposeCodelabsTheme {
+        SootheBottomNavigation(
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
 fun HomeScreenPreview() {
     BasicComposeCodelabsTheme {
         HomeScreen(
             modifier = Modifier.padding(8.dp)
         )
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    BasicComposeCodelabsTheme {
+        MySootheApp()
     }
 }
 
