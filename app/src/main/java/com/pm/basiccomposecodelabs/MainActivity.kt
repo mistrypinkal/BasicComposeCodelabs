@@ -5,9 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -23,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pm.basiccomposecodelabs.ui.theme.BasicComposeCodelabsTheme
+import java.util.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +53,15 @@ private val alignYourBodyData = listOf(
     R.drawable.ab6_pre_natal_yoga to R.string.ab6_pre_natal_yoga
 ).map { DrawableStringPair(it.first, it.second) }
 
+
+private val favoriteCollectionsData = listOf(
+    R.drawable.fc1_short_mantras to R.string.fc1_short_mantras,
+    R.drawable.fc2_nature_meditations to R.string.fc2_nature_meditations,
+    R.drawable.fc3_stress_and_anxiety to R.string.fc3_stress_and_anxiety,
+    R.drawable.fc4_self_massage to R.string.fc4_self_massage,
+    R.drawable.fc5_overwhelmed to R.string.fc5_overwhelmed,
+    R.drawable.fc6_nightly_wind_down to R.string.fc6_nightly_wind_down
+).map { DrawableStringPair(it.first, it.second) }
 
 // Step 1: Search bar - Modifiers
 @Composable
@@ -150,6 +164,65 @@ fun AlignYourBodyRow(
     }
 }
 
+// Step 5: Favorite collection card - Lazy Horizontal Grid
+@ExperimentalFoundationApi
+@Composable
+fun FavoriteCollectionsGrid(
+    modifier: Modifier = Modifier
+) {
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(2),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.height(120.dp)
+    ) {
+        items(favoriteCollectionsData) { item ->
+            FavoriteCollectionCard(
+                drawable = item.drawable,
+                text = item.text,
+                modifier = Modifier.height(56.dp)
+            )
+        }
+    }
+}
+
+// Step 6: Home Section - Header text
+@Composable
+fun HomeSection(
+    @StringRes title: Int,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Column(modifier) {
+        Text(
+            text = stringResource(title).uppercase(Locale.getDefault()),
+            style = MaterialTheme.typography.h2,
+            modifier = Modifier
+                .paddingFromBaseline(top = 40.dp, bottom = 8.dp)
+                .padding(horizontal = 16.dp)
+        )
+        content()
+    }
+}
+
+// Step 7: Home Screen
+@ExperimentalFoundationApi
+@Composable
+fun HomeScreen(modifier: Modifier = Modifier) {
+    Column(modifier) {
+        Spacer(Modifier.height(16.dp))
+        SearchBar(Modifier.padding(horizontal = 16.dp))
+        HomeSection(title = R.string.align_your_body) {
+            AlignYourBodyRow(modifier)
+        }
+        HomeSection(title = R.string.favorite_collections) {
+            FavoriteCollectionsGrid(modifier)
+        }
+        Spacer(Modifier.height(16.dp))
+    }
+}
+
 // Step: MySoothe App - Scaffold
 @Composable
 fun MySootheApp() {
@@ -197,3 +270,27 @@ fun AlignYourBodyRowPreview() {
         )
     }
 }
+
+
+@ExperimentalFoundationApi
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
+fun FavoriteCollectionsGridPreview() {
+    BasicComposeCodelabsTheme {
+        FavoriteCollectionsGrid(
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
+fun HomeScreenPreview() {
+    BasicComposeCodelabsTheme {
+        HomeScreen(
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
